@@ -78,7 +78,7 @@ public class HelloEntity extends PersistentEntity<HelloCommand, HelloEvent, Hell
         // Get the greeting from the current state, and prepend it to the name
         // that we're sending
         // a greeting to, and reply with that message.
-        (cmd, ctx) -> ctx.reply(state().message + ", " + cmd.name + " :/ !"));
+        (cmd, ctx) -> ctx.reply(state().message + ", " + cmd.name + "!"));
 
     /*
      * We've defined all our behaviour, so build and return it.
