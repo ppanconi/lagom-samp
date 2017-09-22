@@ -23,10 +23,10 @@
             <groupId>com.lightbend.lagom</groupId>
             <artifactId>lagom-javadsl-server_2.11</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.lightbend.lagom</groupId>
-            <artifactId>lagom-javadsl-persistence-cassandra_2.11</artifactId>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.lightbend.lagom</groupId>-->
+            <!--<artifactId>lagom-javadsl-persistence-cassandra_2.11</artifactId>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>com.lightbend.lagom</groupId>
             <artifactId>lagom-logback_2.11</artifactId>
@@ -35,12 +35,43 @@
             <groupId>com.typesafe.play</groupId>
             <artifactId>play-netty-server_2.11</artifactId>
         </dependency>
+
+        <!--<dependency>-->
+            <!--<groupId>com.lightbend.lagom</groupId>-->
+            <!--<artifactId>lagom-javadsl-cluster_2.11</artifactId>-->
+            <!--<version>${lagom.version}</version>-->
+        <!--</dependency>-->
+
+        <dependency>
+            <groupId>com.lightbend.lagom</groupId>
+            <artifactId>lagom-javadsl-persistence-jpa_2.11</artifactId>
+            <version>${lagom.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>5.2.11.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.196</version>
+        </dependency>
+
+        <!-- test -->
         <dependency>
             <groupId>com.lightbend.lagom</groupId>
             <artifactId>lagom-javadsl-testkit_2.11</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.8.0</version>
+            <scope>test</scope>
+        </dependency>
 
+        <!-- deployments -->
         <dependency>
             <groupId>com.typesafe.conductr</groupId>
             <artifactId>${conductr.lib.name}</artifactId>

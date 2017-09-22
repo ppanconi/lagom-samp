@@ -67,3 +67,6 @@ buildNumber.properties
 /soapui.log
 /soapui-errors.log
 /global-groovy.log
+/hello-impl/hello-impl.iml
+/report-api/report-api.iml
+/report-impl/report-impl.iml
