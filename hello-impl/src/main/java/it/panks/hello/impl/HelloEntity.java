@@ -3,15 +3,14 @@
  */
 package it.panks.hello.impl;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
-
-import com.lightbend.lagom.javadsl.persistence.PersistentEntity;
-
 import akka.Done;
+import com.lightbend.lagom.javadsl.persistence.PersistentEntity;
+import it.panks.hello.impl.HelloEvent.GreetingMessageChanged;
 import it.panks.hello.impl.HelloCommand.Hello;
 import it.panks.hello.impl.HelloCommand.UseGreetingMessage;
-import it.panks.hello.impl.HelloEvent.GreetingMessageChanged;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 /**
  * This is an event sourced entity. It has a state, {@link HelloState}, which
@@ -59,7 +58,7 @@ public class HelloEntity extends PersistentEntity<HelloCommand, HelloEvent, Hell
     b.setCommandHandler(UseGreetingMessage.class, (cmd, ctx) ->
     // In response to this command, we want to first persist it as a
     // GreetingMessageChanged event
-    ctx.thenPersist(new GreetingMessageChanged(cmd.message),
+    ctx.thenPersist(new GreetingMessageChanged(cmd.message, entityId()),
         // Then once the event is successfully persisted, we respond with done.
         evt -> ctx.reply(Done.getInstance())));
 

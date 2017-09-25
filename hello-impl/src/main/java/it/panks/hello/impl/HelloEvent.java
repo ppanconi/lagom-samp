@@ -3,14 +3,15 @@
  */
 package it.panks.hello.impl;
 
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.Immutable;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
+import com.lightbend.lagom.javadsl.persistence.AggregateEvent;
+import com.lightbend.lagom.javadsl.persistence.AggregateEventTag;
+import com.lightbend.lagom.javadsl.persistence.AggregateEventTagger;
 import com.lightbend.lagom.serialization.Jsonable;
+
+import javax.annotation.concurrent.Immutable;
 
 /**
  * This interface defines all the events that the Hello entity supports.
@@ -18,7 +19,15 @@ import com.lightbend.lagom.serialization.Jsonable;
  * By convention, the events should be inner classes of the interface, which
  * makes it simple to get a complete picture of what events an entity has.
  */
-public interface HelloEvent extends Jsonable {
+public interface HelloEvent extends Jsonable, AggregateEvent<HelloEvent> {
+
+//  int NUM_SHARDS = 4;
+  AggregateEventTag<HelloEvent> TAG = AggregateEventTag.of(HelloEvent.class);
+
+  @Override
+  default AggregateEventTagger<HelloEvent> aggregateTag() {
+    return TAG;
+  }
 
   /**
    * An event that represents a change in greeting message.
@@ -28,33 +37,46 @@ public interface HelloEvent extends Jsonable {
   @JsonDeserialize
   public final class GreetingMessageChanged implements HelloEvent {
     public final String message;
+    public final String id;
 
     @JsonCreator
-    public GreetingMessageChanged(String message) {
+    public GreetingMessageChanged(String message, String id) {
       this.message = Preconditions.checkNotNull(message, "message");
+      this.id = Preconditions.checkNotNull(id, "id");
+    }
+
+    public String getMessage() {
+      return message;
+    }
+
+    public String getId() {
+      return id;
     }
 
     @Override
-    public boolean equals(@Nullable Object another) {
-      if (this == another)
-        return true;
-      return another instanceof GreetingMessageChanged && equalTo((GreetingMessageChanged) another);
-    }
+    public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
 
-    private boolean equalTo(GreetingMessageChanged another) {
-      return message.equals(another.message);
+      GreetingMessageChanged that = (GreetingMessageChanged) o;
+
+      if (message != null ? !message.equals(that.message) : that.message != null) return false;
+      return id != null ? id.equals(that.id) : that.id == null;
     }
 
     @Override
     public int hashCode() {
-      int h = 31;
-      h = h * 17 + message.hashCode();
-      return h;
+      int result = message != null ? message.hashCode() : 0;
+      result = 31 * result + (id != null ? id.hashCode() : 0);
+      return result;
     }
 
     @Override
     public String toString() {
-      return MoreObjects.toStringHelper("GreetingMessageChanged").add("message", message).toString();
+      return "GreetingMessageChanged{" +
+              "message='" + message + '\'' +
+              ", id='" + id + '\'' +
+              '}';
     }
   }
 }

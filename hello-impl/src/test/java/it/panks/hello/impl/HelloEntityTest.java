@@ -3,24 +3,22 @@
  */
 package it.panks.hello.impl;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.Collections;
-import java.util.Optional;
-
+import akka.Done;
+import akka.actor.ActorSystem;
+import akka.testkit.JavaTestKit;
+import com.lightbend.lagom.javadsl.testkit.PersistentEntityTestDriver;
+import com.lightbend.lagom.javadsl.testkit.PersistentEntityTestDriver.Outcome;
+import it.panks.hello.impl.HelloCommand.Hello;
+import it.panks.hello.impl.HelloCommand.UseGreetingMessage;
+import it.panks.hello.impl.HelloEvent.GreetingMessageChanged;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.lightbend.lagom.javadsl.testkit.PersistentEntityTestDriver;
-import com.lightbend.lagom.javadsl.testkit.PersistentEntityTestDriver.Outcome;
+import java.util.Collections;
+import java.util.Optional;
 
-import akka.Done;
-import akka.actor.ActorSystem;
-import akka.testkit.JavaTestKit;
-import it.panks.hello.impl.HelloCommand.Hello;
-import it.panks.hello.impl.HelloCommand.UseGreetingMessage;
-import it.panks.hello.impl.HelloEvent.GreetingMessageChanged;
+import static org.junit.Assert.assertEquals;
 
 public class HelloEntityTest {
 
@@ -49,7 +47,7 @@ public class HelloEntityTest {
     Outcome<HelloEvent, HelloState> outcome2 = driver.run(new UseGreetingMessage("Hi"),
         new Hello("Bob", Optional.empty()));
     assertEquals(1, outcome2.events().size());
-    assertEquals(new GreetingMessageChanged("Hi"), outcome2.events().get(0));
+    assertEquals(new GreetingMessageChanged("Hi", "Alice"), outcome2.events().get(0));
     assertEquals("Hi", outcome2.state().message);
     assertEquals(Done.getInstance(), outcome2.getReplies().get(0));
     assertEquals("Hi, Bob!", outcome2.getReplies().get(1));

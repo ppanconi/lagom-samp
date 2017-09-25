@@ -3,14 +3,15 @@
  */
 package it.panks.hello.api;
 
-import static com.lightbend.lagom.javadsl.api.Service.named;
-import static com.lightbend.lagom.javadsl.api.Service.pathCall;
-
 import akka.Done;
 import akka.NotUsed;
 import com.lightbend.lagom.javadsl.api.Descriptor;
 import com.lightbend.lagom.javadsl.api.Service;
 import com.lightbend.lagom.javadsl.api.ServiceCall;
+import com.lightbend.lagom.javadsl.api.broker.Topic;
+
+import static com.lightbend.lagom.javadsl.api.Service.named;
+import static com.lightbend.lagom.javadsl.api.Service.pathCall;
 
 /**
  * The Hello service interface.
@@ -20,11 +21,12 @@ import com.lightbend.lagom.javadsl.api.ServiceCall;
  */
 public interface HelloService extends Service {
 
+  String GREETINGS_TOPIC = "greetings";
+
   /**
    * Example: curl http://localhost:9000/api/hello/Alice
    */
   ServiceCall<NotUsed, String> hello(String id);
-
 
   /**
    * Example: curl -H "Content-Type: application/json" -X POST -d '{"message":
@@ -32,12 +34,19 @@ public interface HelloService extends Service {
    */
   ServiceCall<GreetingMessage, Done> useGreeting(String id);
 
+  // The topic handle
+  Topic<GreetingApiEvent> greetingsTopic();
+
   @Override
   default Descriptor descriptor() {
     // @formatter:off
     return named("hello").withCalls(
         pathCall("/api/hello/:id",  this::hello),
         pathCall("/api/hello/:id", this::useGreeting)
+      )// here we declare the topic(s) this service will publish to
+      .withTopics(
+              Service.topic(GREETINGS_TOPIC, this::greetingsTopic)
+//                .withProperty(KafkaProperties.partitionKeyStrategy(), GreetingApiEvent::getId)
       ).withAutoAcl(true);
     // @formatter:on
   }

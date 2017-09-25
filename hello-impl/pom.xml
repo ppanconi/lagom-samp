@@ -35,11 +35,19 @@
             <groupId>com.typesafe.play</groupId>
             <artifactId>play-netty-server_2.11</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.lightbend.lagom</groupId>
+            <artifactId>lagom-javadsl-broker_2.11</artifactId>
+        </dependency>
+
+        <!--  test -->
         <dependency>
             <groupId>com.lightbend.lagom</groupId>
             <artifactId>lagom-javadsl-testkit_2.11</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- deploy -->
         <dependency>
             <groupId>com.typesafe.conductr</groupId>
             <artifactId>${conductr.lib.name}</artifactId>

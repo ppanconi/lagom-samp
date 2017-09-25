@@ -15,14 +15,14 @@
                       value="org.hibernate.dialect.H2Dialect"/>
             <!-- Add any other standard or provider-specific properties -->
 
-            <property name="hibernate.connection.url" value="jdbc:h2:mem:test"/>
+            <!--<property name="hibernate.connection.url" value="jdbc:h2:mem:test"/>-->
             <!--<property name="hibernate.connection.driver_class" value=""/>-->
             <!--<property name="hibernate.connection.username" value=""/>-->
             <!--<property name="hibernate.connection.password" value=""/>-->
-            <!--<property name="hibernate.archive.autodetection" value="class"/>-->
-            <!--<property name="hibernate.show_sql" value="true"/>-->
-            <!--<property name="hibernate.format_sql" value="true"/>-->
-            <!--<property name="hbm2ddl.auto" value="update"/>-->
+            <property name="hibernate.archive.autodetection" value="class"/>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.hbm2ddl.auto" value="create"/>
         </properties>
     </persistence-unit>
 

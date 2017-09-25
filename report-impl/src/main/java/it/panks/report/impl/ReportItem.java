@@ -2,17 +2,17 @@ package it.panks.report.impl;
 
 import it.panks.report.api.ItemReportMessage;
 
-//import javax.persistence.Entity;
-//import javax.persistence.Id;
-//import javax.validation.constraints.NotNull;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 
-//@Entity
+@Entity
 public class ReportItem {
 
-//    @Id
+    @Id
     private String id;
 
-//    @NotNull
+    @NotNull
     private String message;
 
     public ReportItem() {
