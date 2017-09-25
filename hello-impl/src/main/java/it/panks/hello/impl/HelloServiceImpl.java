@@ -16,6 +16,8 @@ import it.panks.hello.api.GreetingMessage;
 import it.panks.hello.api.HelloService;
 import it.panks.hello.impl.HelloCommand.Hello;
 import it.panks.hello.impl.HelloCommand.UseGreetingMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.Optional;
@@ -24,6 +26,8 @@ import java.util.Optional;
  * Implementation of the HelloService.
  */
 public class HelloServiceImpl implements HelloService {
+
+  private static Logger logger = LoggerFactory.getLogger(HelloServiceImpl.class);
 
   private final PersistentEntityRegistry persistentEntityRegistry;
 
@@ -46,6 +50,8 @@ public class HelloServiceImpl implements HelloService {
   @Override
   public ServiceCall<GreetingMessage, Done> useGreeting(String id) {
     return request -> {
+
+      logger.info("Request " + request);
       // Look up the hello world entity for the given ID.
       PersistentEntityRef<HelloCommand> ref = persistentEntityRegistry.refFor(HelloEntity.class, id);
       // Tell the entity to use the greeting message specified.
@@ -56,16 +62,28 @@ public class HelloServiceImpl implements HelloService {
 
   @Override
   public Topic<GreetingApiEvent> greetingsTopic() {
-    return TopicProducer. singleStreamWithOffset(offset ->
-      persistentEntityRegistry.eventStream(HelloEvent.TAG, offset).map(param ->
-              Pair.create(toGreetingApiEvent(param.first()), param.second())
-      )
+
+    logger.info(" XXXXXXXXXX __________________________________________________________ call for topic on GreetingApiEvent");
+
+//    return TopicProducer.singleStreamWithOffset(offset ->
+//      persistentEntityRegistry.eventStream(HelloEvent.TAG, offset).map(param -> {
+//                logger.info("_______________________________________________ EUREKA!!!! Event in stream " + param.first());
+//                return Pair.create(toGreetingApiEvent(param.first()), param.second());
+//              }
+//      )
+//    );
+
+    return TopicProducer.taggedStreamWithOffset(HelloEvent.TAG.allTags(), (tag, offset) ->
+      persistentEntityRegistry.eventStream(tag, offset).map(pair -> {
+        logger.info("_______________________________________________ EUREKA!!!! Event in stream " + pair.first());
+        return Pair.create(toGreetingApiEvent(pair.first()), pair.second());
+      })
     );
   }
 
   private GreetingApiEvent toGreetingApiEvent(HelloEvent event) {
 
-    System.out.println("here " + event);
+
 
     if (event instanceof HelloEvent.GreetingMessageChanged) {
       HelloEvent.GreetingMessageChanged helloEvent = (HelloEvent.GreetingMessageChanged) event;

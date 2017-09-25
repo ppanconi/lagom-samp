@@ -5,9 +5,11 @@ package it.panks.hello.impl;
 
 import akka.Done;
 import com.lightbend.lagom.javadsl.persistence.PersistentEntity;
-import it.panks.hello.impl.HelloEvent.GreetingMessageChanged;
 import it.panks.hello.impl.HelloCommand.Hello;
 import it.panks.hello.impl.HelloCommand.UseGreetingMessage;
+import it.panks.hello.impl.HelloEvent.GreetingMessageChanged;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -32,6 +34,8 @@ import java.util.Optional;
  * which is emitted when a {@link UseGreetingMessage} command is received.
  */
 public class HelloEntity extends PersistentEntity<HelloCommand, HelloEvent, HelloState> {
+
+  private static Logger logger = LoggerFactory.getLogger(HelloEntity.class);
 
   /**
    * An entity can define different behaviours for different states, but it will
@@ -68,7 +72,10 @@ public class HelloEntity extends PersistentEntity<HelloCommand, HelloEvent, Hell
     b.setEventHandler(GreetingMessageChanged.class,
         // We simply update the current state to use the greeting message from
         // the event.
-        evt -> new HelloState(evt.message, LocalDateTime.now().toString()));
+        evt -> {
+          logger.info("Event recived in entity HelloEntity " + evt);
+          return new HelloState(evt.message, LocalDateTime.now().toString());}
+        );
 
     /*
      * Command handler for the Hello command.

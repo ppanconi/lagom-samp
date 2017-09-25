@@ -9,6 +9,8 @@ import it.panks.hello.api.GreetingApiEvent;
 import it.panks.hello.api.HelloService;
 import it.panks.report.api.ReportMessage;
 import it.panks.report.api.ReportService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -18,6 +20,8 @@ import java.util.stream.Collectors;
 //import javax.persistence.EntityManager;
 
 public class ReportServiceImpl implements ReportService {
+
+    private static Logger logger = LoggerFactory.getLogger(ReportServiceImpl.class);
 
     private final JpaSession jpaSession;
     private final HelloService helloService;
@@ -29,10 +33,14 @@ public class ReportServiceImpl implements ReportService {
 
         helloService.greetingsTopic().subscribe()
                 .atLeastOnce(
-                Flow.<GreetingApiEvent>create().mapAsync(1, event ->
-                        jpaSession.withTransaction(entityManager ->
-                            entityManager.merge(makeReportItemFromEvent(event))).thenApply(reportItem -> Done.getInstance())
+                Flow.<GreetingApiEvent>create().mapAsync(1, event -> {
+                            logger.info(" ______________________________________ GreetingApiEvent received " + event);
+                            return jpaSession.withTransaction(entityManager ->
+                            entityManager.merge(makeReportItemFromEvent(event))).thenApply(reportItem -> Done.getInstance());
+                        }
                 ));
+
+        logger.info(" ______________________________________________________ greetingsTopic subscribed ");
     }
 
     @Override

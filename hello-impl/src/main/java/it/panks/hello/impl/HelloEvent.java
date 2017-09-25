@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.base.Preconditions;
 import com.lightbend.lagom.javadsl.persistence.AggregateEvent;
+import com.lightbend.lagom.javadsl.persistence.AggregateEventShards;
 import com.lightbend.lagom.javadsl.persistence.AggregateEventTag;
 import com.lightbend.lagom.javadsl.persistence.AggregateEventTagger;
 import com.lightbend.lagom.serialization.Jsonable;
@@ -19,10 +20,10 @@ import javax.annotation.concurrent.Immutable;
  * By convention, the events should be inner classes of the interface, which
  * makes it simple to get a complete picture of what events an entity has.
  */
-public interface HelloEvent extends Jsonable, AggregateEvent<HelloEvent> {
+public interface HelloEvent extends AggregateEvent<HelloEvent>, Jsonable  {
 
-//  int NUM_SHARDS = 4;
-  AggregateEventTag<HelloEvent> TAG = AggregateEventTag.of(HelloEvent.class);
+  int NUM_SHARDS = 4;
+  AggregateEventShards<HelloEvent> TAG = AggregateEventTag.sharded(HelloEvent.class, NUM_SHARDS);
 
   @Override
   default AggregateEventTagger<HelloEvent> aggregateTag() {

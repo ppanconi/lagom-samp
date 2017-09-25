@@ -36,9 +36,13 @@
             <artifactId>play-netty-server_2.11</artifactId>
         </dependency>
 
+        <!--<dependency>-->
+        <!--<groupId>com.lightbend.lagom</groupId>-->
+        <!--<artifactId>lagom-javadsl-broker_2.11</artifactId>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>com.lightbend.lagom</groupId>
-            <artifactId>lagom-javadsl-broker_2.11</artifactId>
+            <artifactId>lagom-javadsl-kafka-broker_2.11</artifactId>
         </dependency>
 
         <!--  test -->
